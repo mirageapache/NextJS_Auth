@@ -13,11 +13,11 @@ export const metadata: Metadata = {
   description: 'Sign-Up and Sign-In with Nextjs',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+interface Props {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: Props) {
   return (
     <html suppressHydrationWarning lang="en">
       <body className={inter.className}>
