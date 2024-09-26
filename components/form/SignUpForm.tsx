@@ -19,15 +19,21 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useToast } from "@/hooks/useToast"
+import { SignUpWithCredentialsParams } from "@/lib/actions/authAction"
+import { useRouter } from "next/navigation"
 
 interface SignUpFormProps {
   callbackUrl: string
+  signUpWithCredentials: (values: SignUpWithCredentialsParams) => Promise<{success?: boolean}>
 }
 
 const SignUpForm = ({
-  callbackUrl
+  signUpWithCredentials
 }: SignUpFormProps) => {
+  const router = useRouter();
   const { pending } = useFormStatus();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof userSignUpValidation>>({
     resolver: zodResolver(userSignUpValidation),
@@ -40,7 +46,16 @@ const SignUpForm = ({
   })
 
   async function onSubmit(values: z.infer<typeof userSignUpValidation>) {
-    console.log(values)
+    const res = await signUpWithCredentials(values)
+
+    if (res?.success) {
+      toast({
+        description: "Sign up successfully."
+      })
+      router.push("/signin")
+    } else {
+      toast({ description: "Failed to sign up"});
+    }
   }
 
   return (
