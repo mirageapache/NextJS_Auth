@@ -9,7 +9,6 @@ interface SignInPageProps {
 const SignInPage = ({
   searchParams: { callbackUrl }
 }: SignInPageProps) => {
-  // console.log(callbackUrl)
   return (
     <div className="w-full">
       <SignInForm callbackUrl={callbackUrl || "/"} />

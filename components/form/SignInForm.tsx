@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import GoogleSignInButton from "@/components/button/GoogleSignInButton"
 
 interface SignInFormProps {
   callbackUrl: string
@@ -89,7 +90,9 @@ const SignInForm = ({
         <span className="px-2 text-gray-400">or</span>
         <div className="border-b border-gray-400 w-full"></div>
       </div>
-      {/* GoogleSignInButton */}
+      <GoogleSignInButton callbackUrl={callbackUrl}>
+        Sign in with Google
+      </GoogleSignInButton>
       <p className="text-center text-sm text-gray-600 mt-2">
         Don&apos;t have an account?&nbsp;
         <Link className="text-blue-600 hover:underline" href="/signup">
