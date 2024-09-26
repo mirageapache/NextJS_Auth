@@ -1,5 +1,4 @@
 "use server"
-
 import { getServerSession } from "next-auth/next"
 import { nextauthOptions } from "@/lib/nextauthOptions"
 // import { Account, Profile } from "next-auth"
@@ -14,6 +13,7 @@ export async function getUserSession() {
   return ({ session })
 }
 
+/** 註冊參數型別 */
 export interface SignUpWithCredentialsParams {
   name: string,
   email: string,
@@ -50,4 +50,35 @@ export async function signUpWithCredentials ({
   } catch (error) {
     redirect(`/error?error=${(error as Error).message}`)
   }
+}
+
+/** 登入參數型別 */
+interface SignInWithCredentialsParams {
+  email: string,
+  password: string
+}
+
+/** 登入 */
+export async function signInWithCredentials ({
+  email,
+  password
+}: SignInWithCredentialsParams) {
+  await connectDB()
+
+  const user = await User.findOne({email})
+
+  if (!user) {
+    throw new Error("Invalid email or password!")
+  }
+
+  const passwordIsValid = await bcrypt.compare(
+    password,
+    user.password
+  )
+
+  if (!passwordIsValid) {
+    throw new Error("Invalid email or password")
+  }
+
+  return {...user._doc, _id: user._id.toString()}
 }

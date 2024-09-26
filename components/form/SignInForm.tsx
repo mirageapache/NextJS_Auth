@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import GoogleSignInButton from "@/components/button/GoogleSignInButton"
+import { signIn } from "next-auth/react"
 
 interface SignInFormProps {
   callbackUrl: string
@@ -39,7 +40,11 @@ const SignInForm = ({
   })
 
   async function onSubmit(values: z.infer<typeof userSignInValidation>) {
-    console.log(values)
+    await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      callbackUrl
+    })
   }
 
   return (
