@@ -5,6 +5,9 @@ import { signInWithCredentials } from "./actions/authAction"
 
 export const nextauthOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/signin", // app/signin
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,

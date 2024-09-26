@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { buttonVariants } from "../ui/button"
 import UserAvatar from "@/components/shared/UserAvatar"
+import SignOutButton from "@/components/button/SignOutButton"
 
 const UserNav = async () => {
   const { session } = await getUserSession()
@@ -27,6 +28,9 @@ const UserNav = async () => {
               <Link href="/profile">
                 Profile
               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <SignOutButton />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
