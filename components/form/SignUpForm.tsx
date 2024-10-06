@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
+"use client";
 
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
 // 在最新版本的 react-dom 中，使用 useFormStatus 來管理表單狀態。
-import { useFormStatus } from 'react-dom'
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { userSignUpValidation } from "@/lib/validations/auth"
-import Link from "next/link"
+import { useFormStatus } from "react-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { userSignUpValidation } from "@/lib/validations/auth";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,20 +17,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { useToast } from "@/hooks/useToast"
-import { SignUpWithCredentialsParams } from "@/lib/actions/authAction"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/useToast";
+import { SignUpWithCredentialsParams } from "@/lib/actions/authAction";
+import { useRouter } from "next/navigation";
 
 interface SignUpFormProps {
-  callbackUrl: string
-  signUpWithCredentials: (values: SignUpWithCredentialsParams) => Promise<{success?: boolean}>
+  callbackUrl: string;
+  signUpWithCredentials: (
+    values: SignUpWithCredentialsParams
+  ) => Promise<{ success?: boolean }>;
 }
 
-const SignUpForm = ({
-  signUpWithCredentials
-}: SignUpFormProps) => {
+const SignUpForm = ({ signUpWithCredentials }: SignUpFormProps) => {
   const router = useRouter();
   const { pending } = useFormStatus();
   const { toast } = useToast();
@@ -42,19 +42,18 @@ const SignUpForm = ({
       email: "",
       password: "",
       confirmPassword: "",
-    }
-  })
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof userSignUpValidation>) {
-    const res = await signUpWithCredentials(values)
-
+    const res = await signUpWithCredentials(values);
     if (res?.success) {
       toast({
-        description: "Sign up successfully."
-      })
-      router.push("/signin")
+        description: "Sign up successfully.",
+      });
+      router.push("/signin");
     } else {
-      toast({ description: "Failed to sign up"});
+      toast({ description: "Failed to sign up" });
     }
   }
 
@@ -123,11 +122,7 @@ const SignUpForm = ({
             )}
           />
         </div>
-        <Button
-          className="w-full mt-6"
-          type="submit"
-          disabled={pending}
-        >
+        <Button className="w-full mt-6" type="submit" disabled={pending}>
           {pending ? "Submitting..." : "Sign Up"}
         </Button>
       </form>
@@ -143,7 +138,7 @@ const SignUpForm = ({
         </Link>
       </p>
     </Form>
-  )
-}
+  );
+};
 
-export default SignUpForm
+export default SignUpForm;
