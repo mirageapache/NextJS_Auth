@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
+"use client";
 
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
 // 在最新版本的 react-dom 中，使用 useFormStatus 來管理表單狀態。
-import { useFormStatus } from 'react-dom'
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { userSignInValidation } from "@/lib/validations/auth"
-import Link from "next/link"
+import { useFormStatus } from "react-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { userSignInValidation } from "@/lib/validations/auth";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,34 +17,33 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import GoogleSignInButton from "@/components/button/GoogleSignInButton"
-import { signIn } from "next-auth/react"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import GoogleSignInButton from "@/components/button/GoogleSignInButton";
+import { signIn } from "next-auth/react";
+import LineSignInButton from "../button/LineSignInButton";
 
 interface SignInFormProps {
-  callbackUrl: string
+  callbackUrl: string;
 }
 
-const SignInForm = ({
-  callbackUrl
-}: SignInFormProps) => {
+const SignInForm = ({ callbackUrl }: SignInFormProps) => {
   const { pending } = useFormStatus();
 
   const form = useForm<z.infer<typeof userSignInValidation>>({
     resolver: zodResolver(userSignInValidation),
     defaultValues: {
       email: "",
-      password: ""
-    }
-  })
+      password: "",
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof userSignInValidation>) {
     await signIn("credentials", {
       email: values.email,
       password: values.password,
-      callbackUrl
-    })
+      callbackUrl,
+    });
   }
 
   return (
@@ -82,11 +81,7 @@ const SignInForm = ({
             )}
           />
         </div>
-        <Button
-          className="w-full mt-6"
-          type="submit"
-          disabled={pending}
-        >
+        <Button className="w-full mt-6" type="submit" disabled={pending}>
           {pending ? "Submitting..." : "Sign In"}
         </Button>
       </form>
@@ -95,9 +90,14 @@ const SignInForm = ({
         <span className="px-2 text-gray-400">or</span>
         <div className="border-b border-gray-400 w-full"></div>
       </div>
-      <GoogleSignInButton callbackUrl={callbackUrl}>
-        Sign in with Google
-      </GoogleSignInButton>
+      <div>
+        {/* <GoogleSignInButton callbackUrl={callbackUrl}>
+          Sign in with Google
+        </GoogleSignInButton> */}
+        <LineSignInButton callbackUrl={callbackUrl}>
+          Sign in with Line
+        </LineSignInButton>
+      </div>
       <p className="text-center text-sm text-gray-600 mt-2">
         Don&apos;t have an account?&nbsp;
         <Link className="text-blue-600 hover:underline" href="/signup">
@@ -105,7 +105,7 @@ const SignInForm = ({
         </Link>
       </p>
     </Form>
-  )
-}
+  );
+};
 
-export default SignInForm
+export default SignInForm;
