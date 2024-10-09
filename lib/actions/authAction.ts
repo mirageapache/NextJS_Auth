@@ -131,3 +131,88 @@ export async function getUserByEmail({ email }: GetUserByEmailParams) {
   // console.log({user})
   return { ...user._doc, _id: user._id.toString() };
 }
+
+export interface UpdateUserProfileParams {
+  name: string
+}
+
+/** 更新使用者資料 */
+export async function updateUserProfile({
+  name
+}: UpdateUserProfileParams) {
+  const session = await getServerSession(nextauthOptions)
+  // console.log(session)
+
+  connectDB()
+
+  try {
+    if (!session) {
+      throw new Error("Unauthorization!")
+    }
+
+    const user = await User.findByIdAndUpdate(session?.user?._id, {
+      name
+    }, { new: true }).select("-password")
+
+    if (!user) {
+      throw new Error ("User does not exist!")
+    }
+
+    return { success: true }
+  } catch (error) {
+    redirect(`/error?error=${(error as Error).message}`)
+  }
+}
+
+export interface ChangeUserPasswordParams {
+  oldPassword: string,
+  newPassword: string
+}
+
+/** 變更密碼 */
+export async function changeUserPassword ({
+  oldPassword,
+  newPassword
+}: ChangeUserPasswordParams) {
+  "use server"
+  const session = await getServerSession(nextauthOptions)
+  // console.log(session)
+
+  connectDB()
+
+  try {
+    if (!session) {
+      throw new Error("Unauthorization!")
+    }
+
+    if (session.user.provider !== "credentials") {
+      throw new Error(`Signed in via ${session?.user?.provider}. Changes not allowed with this method.`)
+    }
+
+    const user = await User.findById(session.user._id)
+
+    if (!user) {
+      throw new Error("User does not exist!")
+    }
+
+    const passwordIsValid = await bcrypt.compare(
+      oldPassword,
+      user.password
+    )
+
+    if (!passwordIsValid) {
+      throw new Error("Incorrect old password.")
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(newPassword, salt)
+
+    await User.findByIdAndUpdate(user._id, {
+      password: hashedPassword
+    })
+
+    return { success: true }
+  } catch (error) {
+    redirect(`/error?error=${(error as Error).message}`)
+  }
+}

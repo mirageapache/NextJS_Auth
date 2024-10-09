@@ -8,6 +8,7 @@ export const nextauthOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/signin", // app/signin
+    error: "/error", // app/error
   },
   providers: [
     GoogleProvider({
