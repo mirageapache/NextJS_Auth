@@ -97,7 +97,6 @@ export async function signInWithOauth({
   profile,
 }: SignInWithOauthParams) {
   await connectDB();
-
   try {
     const user = await User.findOne({ email: profile.email });
     if (user) return true;
@@ -109,9 +108,10 @@ export async function signInWithOauth({
       provider: account.provider,
     });
 
-    return { success: true };
+    return true;
   } catch (error) {
-    return { error: error };
+    console.log(error);
+    return false;
   }
 }
 

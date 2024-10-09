@@ -40,7 +40,7 @@ export const nextauthOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ account, profile }) {
-      // console.log({account, profile})
+      console.log(account, profile);
       if (account?.type === "oauth" && profile) {
         return await signInWithOauth({ account, profile });
       }
